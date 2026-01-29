@@ -1,6 +1,8 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs'); // 1. Ye add kiya
+const bcrypt = require('bcryptjs'); // Import bcrypt for password hashing
+
+// REGISTER CONTROLLER
 
 exports.register = async (req, res) => {
   try {
