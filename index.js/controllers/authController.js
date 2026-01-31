@@ -13,14 +13,13 @@ exports.register = async (req, res) => {
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
     // 2. Password ko hash (secure) karna
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+   
 
     // 3. Hashed password ke saath user create karna
     user = new User({ 
       name, 
       email, 
-      password: hashedPassword 
+      password: password 
     });
 
     await user.save();
@@ -44,13 +43,13 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     // 1. Check karo user database mein hai ya nahi
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
 
     // 2. Password match karo (bcrypt.compare use karke)
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
@@ -69,4 +68,9 @@ exports.login = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
+};
+// @desc    Get user profile
+// @route   GET /api/auth/profile
+exports.getUserProfile = async (req, res) => {
+  res.json(req.user);
 };

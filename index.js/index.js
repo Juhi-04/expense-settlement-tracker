@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.js'); // Check filename in routes folder!
 
-dotenv.config();
+dotenv.config({ path: __dirname + '/.env' });
 const app = express();
 
 // Middlewares

@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { register } = require('../controllers/authController');
+const { register, login, getUserProfile } = require('../controllers/authController');
+const { protect } = require('../middleware/authMiddleware');
 
-// Ye line user ko link karti hai logic se
 router.post('/register', register);
 router.post('/login', login);
 
-module.exports = router;
+// Naya protected route
+router.get('/profile', protect, getUserProfile);
+
+module.exports  = router;   

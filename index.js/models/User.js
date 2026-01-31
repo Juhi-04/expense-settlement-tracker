@@ -31,7 +31,10 @@ userSchema.pre('save', async function (next) {
 
 // Method to compare entered password with hashed password
 userSchema.methods.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
+  console.log('Entered:', enteredPassword);
+  console.log('Stored (Hashed):', this.password); // Ye check karega ki password undefined toh nahi hai
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+// Isse model double register nahi hoga
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);
